@@ -70,7 +70,7 @@ const Detail = () => {
         <p><strong>Name:</strong> {employee.employeeName}</p>
         <p><strong>Employee ID:</strong> {employee.employeeId}</p>
         <p><strong>Role:</strong> {employee.role}</p>
-        <p><strong>Password:</strong> {employee.password}</p>
+       
 
         <button style={styles.button} onClick={() => setShowPasswordFields(!showPasswordFields)}>
           Change Password
