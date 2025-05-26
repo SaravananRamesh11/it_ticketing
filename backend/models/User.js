@@ -17,7 +17,16 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   employeeName: String,
   employeeId: String,
-  role: String
+  role: String,
+  password:String
 });
+
+userSchema.statics.getNameById = async function (_id) {
+  const user = await this.findById(_id).lean();
+  return user?.employeeName || null;
+};
+
+
+
 
 module.exports = mongoose.model('User', userSchema);

@@ -10,23 +10,69 @@
 // export default App
 
 // src/App.jsx
-import React from 'react';
+// import React from 'react';
+// import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// import LoginPage from './pages/LoginPage.jsx';
+// import EmployeePage from './pages/EmployeePage.jsx';
+// import ITSupportPage from './pages/ITSupportPage.jsx';
+// import AdminPage from './pages/AdminPage.jsx';
+// import SuperuserPage from './pages/SuperuserPage.jsx';
+
+// function App() {
+//   return (
+//     <BrowserRouter>
+//       <Routes>
+//         <Route path="/" element={<LoginPage />} />
+//         <Route path="/employee" element={<EmployeePage />} />
+//         <Route path="/itsupport" element={<ITSupportPage />} />
+//         <Route path="/admin" element={<AdminPage />} />
+//         <Route path="/superuser" element={<SuperuserPage />} />
+//       </Routes>
+//     </BrowserRouter>
+//   );
+// }
+
+// export default App;
+
+
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage.jsx';
-import EmployeePage from './pages/EmployeePage.jsx';
-import ITSupportPage from './pages/ITSupportPage.jsx';
-import AdminPage from './pages/AdminPage.jsx';
+import EmployeePage from './pages/user/EmployeePage.jsx';
+import ITSupportPage from './pages/itsupport/ITSupportPage.jsx';
 import SuperuserPage from './pages/SuperuserPage.jsx';
+import useAuth from './hooks/login_context_hook.js'; // adjust path if needed
+import Detail from "./pages/user/detail"
+//import AdminPage from './pages/admin/AdminPage.jsx';
+
+
 
 function App() {
+  const { dispatch } = useAuth();
+
+  useEffect(() => {
+    const handleUnload = () => {
+      dispatch({ type: 'LOGOUT' });
+    };
+
+    window.addEventListener('unload', handleUnload);
+
+    return () => {
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/employee" element={<EmployeePage />} />
         <Route path="/itsupport" element={<ITSupportPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        {/* <Route path="/admin" element={<AdminPage />} /> */}
         <Route path="/superuser" element={<SuperuserPage />} />
+        <Route path="/userdetails" element={< Detail/>} />
+
+         
       </Routes>
     </BrowserRouter>
   );

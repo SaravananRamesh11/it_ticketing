@@ -36,27 +36,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useAuth  from '../hooks/login_context_hook'; // Import the AuthContext hook
 
 const LoginPage = () => {
-  const [ename, setEname] = useState('');
   const [eid, setEid] = useState('');
+  const [password, setpassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { state,dispatch } = useAuth(); // Use the AuthContext hook to get the setUser
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/users/login', {
-        ename,
-        eid
+      const res = await axios.post('http://localhost:5000/api/general/login', {
+        eid,
+        password
       });
+      if(res.data.token){
+      dispatch({type:"LOGIN",payload:{...res.data}});
+    }
+      navigate(`/${res.data.role}`);
 
-      const role = res.data.role.toLowerCase();
-      if (role === 'employee') navigate('/employee');
-      else if (role === 'itsupport') navigate('/itsupport');
-      else if (role === 'admin') navigate('/admin');
-      else if (role === 'superuser') navigate('/superuser');
-      else setError('Unknown role');
+      
+      
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
@@ -67,20 +69,20 @@ const LoginPage = () => {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
-          <label>Employee Name:</label>
-          <input
-            type="text"
-            value={ename}
-            onChange={(e) => setEname(e.target.value)}
-            required
-          />
-        </div>
-        <div>
           <label>Employee ID:</label>
           <input
             type="text"
             value={eid}
             onChange={(e) => setEid(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setpassword(e.target.value)}
             required
           />
         </div>
