@@ -103,12 +103,14 @@
 
 
 
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import './employee.css'; // Import the CSS file
 
 const schema = yup.object().shape({
   issue: yup.string().required('Issue is required'),
@@ -116,7 +118,7 @@ const schema = yup.object().shape({
   time: yup
     .string()
     .required('Time is required')
-    .matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/, 'Invalid time'),
+    .matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/, 'Invalid time (HH:MM format)'),
 });
 
 const EmployeePage = () => {
@@ -132,23 +134,25 @@ const EmployeePage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data) => {
-     if (data.date) {
+    if (data.date) {
+      // Ensure date is in ISO string format for backend
       data.date = new Date(data.date).toISOString();
     }
     setIsLoading(true);
+    setSubmitted(false); // Reset submitted state on new submission
     try {
-      console.log(data)
+      console.log("Form data before submission:", data);
       const id = localStorage.getItem('id');
-      data.id=id;
       if (!id) {
         alert('User ID not found. Please login again.');
+        navigate('/login'); // Redirect to login
         return;
       }
 
       // Get user details
       const userResponse = await axios.post(
         "http://localhost:5000/api/general/details",
-        { id }, // Correct request body
+        { id },
         {
           headers: {
             'Content-Type': 'application/json'
@@ -156,27 +160,26 @@ const EmployeePage = () => {
         }
       );
 
-      // Properly access response data
       const userData = userResponse.data;
-      console.log(" on submit of employee page User details:", userData);
+      console.log("User details fetched:", userData);
 
-      // Prepare ticket data
+      // Prepare ticket data with necessary employee details
       const ticketData = {
         ...data,
         employeeName: userData.employeeName,
         email: userData.email,
         employeeId: userData.employeeId
       };
-      console.log("ticket data",ticketData)
+      console.log("Ticket data being sent:", ticketData);
 
       // Submit ticket
-      await axios.post('http://localhost:5000/api/user/ticket', {ticketData});
-      
+      await axios.post('http://localhost:5000/api/user/ticket', { ticketData });
+
       setSubmitted(true);
-      reset();
+      reset(); // Clear form fields
     } catch (error) {
-      console.error('Submission failed:', error);
-      const message = error.response?.data?.message || 'Failed to submit ticket';
+      console.error('Ticket submission failed:', error);
+      const message = error.response?.data?.message || 'Failed to submit ticket. Please try again.';
       alert(message);
     } finally {
       setIsLoading(false);
@@ -188,29 +191,52 @@ const EmployeePage = () => {
   }
 
   return (
-    <div style={styles.container}>
-      <button style={styles.detailsButton} onClick={userpage}>
-        Employee Details
+    <div className="employee-page-container">
+      <button className="details-button" onClick={userpage}>
+        My Details
       </button>
-      <div style={styles.formContainer}>
-        <h2 style={styles.title}>Submit a Ticket</h2>
+
+      <div className="form-card">
+        <h2 className="form-title">Submit a New Ticket</h2>
         {submitted ? (
-          <p style={styles.success}>
-            🎉 Ticket submitted successfully! You'll receive a confirmation email.
-          </p>
+          <div className="success-message-card">
+            <p className="success-message-text">
+              🎉 Your ticket has been submitted successfully!
+            </p>
+            <p className="success-message-subtext">
+              You will receive a confirmation email shortly.
+            </p>
+            <button className="new-ticket-button" onClick={() => setSubmitted(false)}>
+              Submit another ticket
+            </button>
+          </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} style={styles.form}>
-            <input style={styles.input} placeholder="Issue" {...register('issue')} />
-            {errors.issue && <p style={styles.error}>{errors.issue.message}</p>}
+          <form onSubmit={handleSubmit(onSubmit)} className="ticket-form">
+            <div className="form-group">
+              <label htmlFor="issue" className="form-label">Issue Description</label>
+              <input
+                id="issue"
+                className="form-input"
+                placeholder="Briefly describe your issue..."
+                {...register('issue')}
+              />
+              {errors.issue && <p className="error-text">{errors.issue.message}</p>}
+            </div>
 
-            <input style={styles.input} type="date" {...register('date')} />
-            {errors.date && <p style={styles.error}>{errors.date.message}</p>}
+            <div className="form-group">
+              <label htmlFor="date" className="form-label">Preferred Date</label>
+              <input id="date" className="form-input" type="date" {...register('date')} />
+              {errors.date && <p className="error-text">{errors.date.message}</p>}
+            </div>
 
-            <input style={styles.input} type="time" {...register('time')} />
-            {errors.time && <p style={styles.error}>{errors.time.message}</p>}
+            <div className="form-group">
+              <label htmlFor="time" className="form-label">Preferred Time</label>
+              <input id="time" className="form-input" type="time" {...register('time')} />
+              {errors.time && <p className="error-text">{errors.time.message}</p>}
+            </div>
 
-            <button 
-              style={styles.submitButton} 
+            <button
+              className="submit-ticket-button"
               type="submit"
               disabled={isLoading}
             >
@@ -221,79 +247,6 @@ const EmployeePage = () => {
       </div>
     </div>
   );
-};
-
-// ... your styles remain the same ...
-
-
-
-const styles = {
-  container: {
-    position: 'relative',
-    padding: '2rem',
-    fontFamily: 'Arial, sans-serif',
-    backgroundColor: '#f9f9f9',
-    minHeight: '100vh',
-  },
-  detailsButton: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    padding: '10px 20px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-    transition: 'background-color 0.2s ease-in-out',
-  },
-  formContainer: {
-    maxWidth: '500px',
-    margin: 'auto',
-    padding: '2rem',
-    backgroundColor: '#fff',
-    borderRadius: '10px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-  },
-  title: {
-    textAlign: 'center',
-    color: '#333',
-    marginBottom: '1.5rem',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  input: {
-    padding: '10px',
-    marginBottom: '10px',
-    fontSize: '1rem',
-    borderRadius: '6px',
-    border: '1px solid #ccc',
-  },
-  submitButton: {
-    padding: '12px',
-    fontSize: '1rem',
-    backgroundColor: '#28a745',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    marginTop: '10px',
-  },
-  error: {
-    color: 'red',
-    marginBottom: '8px',
-    fontSize: '0.9rem',
-  },
-  success: {
-    backgroundColor: '#d4edda',
-    padding: '1rem',
-    borderRadius: '8px',
-    color: '#155724',
-  },
 };
 
 export default EmployeePage;

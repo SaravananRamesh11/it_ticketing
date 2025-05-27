@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import EmployeeRegistrationForm from './addusers'; 
+import SupportMemberPieChart from './pie';
+import  RemoveUserForm  from './remove';
 import { 
   Box, 
   Drawer, 
@@ -58,8 +60,8 @@ const AdminPage = () => {
   const menuItems = [
     { id: 'createUser', text: 'Create User', icon: <PersonAddIcon /> },
     { id: 'deleteEmployee', text: 'Delete Employee', icon: <PersonRemoveIcon /> },
-    { id: 'pieChart', text: 'Pie Chart', icon: <PieChartIcon /> },
-    { id: 'openTickets', text: 'Current Open Tickets', icon: <AssignmentIcon /> },
+    { id: 'pieChart', text: 'IT Support Statistics', icon: <PieChartIcon /> },
+    // { id: 'openTickets', text: 'Current Open Tickets', icon: <AssignmentIcon /> },
     { id: 'deleteClosedTickets', text: 'Delete Closed Tickets', icon: <DeleteIcon /> },
   ];
 
@@ -68,7 +70,7 @@ const AdminPage = () => {
       case 'createUser':
         return (
            <Paper elevation={3} sx={{ p: 3 }}>
-            {/* <Typography variant="h5" gutterBottom>Create New User</Typography> */}
+            <Typography variant="h5" gutterBottom>Create New User</Typography>
             <EmployeeRegistrationForm />
            </Paper>
         );
@@ -76,23 +78,24 @@ const AdminPage = () => {
         return (
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>Delete Employee</Typography>
-            {/* Add delete employee interface here */}
+            <RemoveUserForm/>
+            
           </Paper>
         );
       case 'pieChart':
         return (
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>Ticket Statistics</Typography>
-            {/* Add pie chart component here */}
+              < SupportMemberPieChart  />
           </Paper>
         );
-      case 'openTickets':
-        return (
-          <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h5" gutterBottom>Current Open Tickets</Typography>
-            {/* Add open tickets list here */}
-          </Paper>
-        );
+      // case 'openTickets':
+      //   return (
+      //     <Paper elevation={3} sx={{ p: 3 }}>
+      //       <Typography variant="h5" gutterBottom>Current Open Tickets</Typography>
+      //       {/* Add open tickets list here */}
+      //     </Paper>
+      //   );
       case 'deleteClosedTickets':
         return (
           <Paper elevation={3} sx={{ p: 3 }}>

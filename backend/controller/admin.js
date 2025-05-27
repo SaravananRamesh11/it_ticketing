@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const saltRounds = 10; // Number of salt rounds for bcrypt
+const Ticket=require("../models/Ticket")
 
 // Add new employee endpoint with password hashing
 const register_user = async (req, res) => {
@@ -57,4 +58,64 @@ const register_user = async (req, res) => {
   }
 };
 
-module.exports = { register_user };
+// In your backend controller
+const getTicketStats = async (req, res) => {
+  try {
+    // Get all IT support members
+    const itSupportMembers = await User.find({ role: 'IT Support' }).lean();
+    
+    // Get ticket counts for each support member
+    const stats = await Promise.all(itSupportMembers.map(async (member) => {
+      const closedCount = await Ticket.countDocuments({
+        itSupport: member.employeeName,
+        status: 'Closed'
+      });
+      
+      const totalCount = await Ticket.countDocuments({
+        itSupport: member.employeeName
+      });
+      
+      return {
+        name: member.employeeName,
+        closed: closedCount,
+        open: totalCount - closedCount
+      };
+    }));
+    
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error('Error fetching ticket stats:', error);
+    res.status(500).json({ error: 'Failed to fetch ticket statistics' });
+  }
+};
+
+
+// POST or DELETE to /delete-user
+const removeemployee = async (req, res) => {
+  const { employeeId } = req.body;
+
+  if (!employeeId) {
+    return res.status(400).json({ message: 'employeeId is required' });
+  }
+
+  try {
+    const result = await User.findOneAndDelete({ employeeId });
+
+    if (!result) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ message: `User with employeeId ${employeeId} deleted successfully` });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+
+
+
+module.exports = { register_user,getTicketStats,removeemployee};

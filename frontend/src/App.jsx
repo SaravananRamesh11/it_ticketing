@@ -40,7 +40,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage.jsx';
 import EmployeePage from './pages/user/EmployeePage.jsx';
 import ITSupportPage from './pages/itsupport/ITSupportPage.jsx';
-import SuperuserPage from './pages/SuperuserPage.jsx';
+// import SuperuserPage from './pages/SuperuserPage.jsx';
 import useAuth from './hooks/login_context_hook.js'; // adjust path if needed
 import Detail from "./pages/user/detail"
 import AdminPage from './pages/admin/AdminPage.jsx';
@@ -70,7 +70,7 @@ function App() {
         <Route path="/employee" element={<EmployeePage />} />
         <Route path="/itsupport" element={<ITSupportPage />} />
         <Route path="/admin" element={<AdminPage />} />
-        <Route path="/superuser" element={<SuperuserPage />} />
+        {/* <Route path="/superuser" element={<SuperuserPage />} /> */}
         <Route path="/userdetails" element={< Detail/>} />
         {/* <Route path="/e" element={< EmployeeRegistrationForm/>} /> */}
 
