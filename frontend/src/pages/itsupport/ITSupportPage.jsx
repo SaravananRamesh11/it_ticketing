@@ -309,8 +309,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './it.css'; // Make sure this CSS file is in the same directory
+import { useNavigate } from 'react-router-dom';
 
 function ITSupportPage() {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [showInput, setShowInput] = useState({});
   const [resolutions, setResolutions] = useState({});
@@ -340,10 +342,16 @@ function ITSupportPage() {
         setLoading(false);
       }
     };
+    function userpage() {
+    navigate("/userdetails");
+  }
 
     fetchOpenTickets();
   }, [id]); // Depend on 'id' so it refetches if ID changes
 
+  function userpage() {
+    navigate("/userdetails");
+  }
   const handleShowInput = (ticketId) => {
     setShowInput(prev => ({ ...prev, [ticketId]: true }));
   };
@@ -383,67 +391,137 @@ function ITSupportPage() {
     }
   };
 
-  return (
-    <div className="it-support-page-container">
+//   return (
+//     <div className="it-support-page-container">
+//       <h1 className="it-dashboard-title">IT Support Dashboard</h1>
+
+//       {loading && <div className="loading-message">Loading open tickets...</div>}
+//       {error && <div className="error-message">{error}</div>}
+
+//       {!loading && !error && (
+//         <div className="ticket-list-grid">
+//           {tickets.length > 0 ? (
+//             tickets.map((ticket) => (
+//               <div key={ticket._id} className="ticket-card">
+//                 <div className="ticket-header">
+//                   <h3 className="ticket-issue">{ticket.issue}</h3>
+//                   <span className={`ticket-status status-${ticket.status.toLowerCase().replace(/\s/g, '-')}`}>
+//                     {ticket.status}
+//                   </span>
+//                 </div>
+//                 <div className="ticket-info">
+//                   <p><strong className="info-label">Employee:</strong> {ticket.employeeName}</p>
+//                   <p><strong className="info-label">ID:</strong> {ticket.employeeId}</p>
+//                   <p><strong className="info-label">Email:</strong> {ticket.email}</p>
+//                   <p><strong className="info-label">Date:</strong> {new Date(ticket.date).toLocaleDateString()}</p>
+//                   <p><strong className="info-label">Time:</strong> {ticket.time}</p>
+//                 </div>
+
+//                 {!showInput[ticket._id] ? (
+//                   <button className="action-button close-ticket-btn" onClick={() => handleShowInput(ticket._id)}>
+//                     Close Ticket
+//                   </button>
+//                 ) : (
+//                   <div className="resolution-section">
+//                     <textarea
+//                       placeholder="Enter resolution description..."
+//                       value={resolutions[ticket._id] || ''}
+//                       onChange={(e) => handleResolutionChange(ticket._id, e.target.value)}
+//                       className="resolution-textarea"
+//                       rows={4}
+//                     />
+//                     <div className="resolution-actions">
+//                       <button className="action-button submit-resolution-btn" onClick={() => handleCloseTicket(ticket._id)}>
+//                         Submit Resolution
+//                       </button>
+//                       <button className="action-button cancel-resolution-btn" onClick={() => setShowInput(prev => ({ ...prev, [ticket._id]: false }))}>
+//                         Cancel
+//                       </button>
+//                     </div>
+//                   </div>
+//                 )}
+//               </div>
+//             ))
+//           ) : (
+//             <div className="no-tickets-message">
+//               <p>🎉 No open tickets assigned to you right now. Great job!</p>
+//               <p>Check back later or enjoy your break!</p>
+//             </div>
+//           )}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
+return (
+  <div className="it-support-page-container">
+    <div className="it-dashboard-header"> {/* Added a div for header elements */}
       <h1 className="it-dashboard-title">IT Support Dashboard</h1>
-
-      {loading && <div className="loading-message">Loading open tickets...</div>}
-      {error && <div className="error-message">{error}</div>}
-
-      {!loading && !error && (
-        <div className="ticket-list-grid">
-          {tickets.length > 0 ? (
-            tickets.map((ticket) => (
-              <div key={ticket._id} className="ticket-card">
-                <div className="ticket-header">
-                  <h3 className="ticket-issue">{ticket.issue}</h3>
-                  <span className={`ticket-status status-${ticket.status.toLowerCase().replace(/\s/g, '-')}`}>
-                    {ticket.status}
-                  </span>
-                </div>
-                <div className="ticket-info">
-                  <p><strong className="info-label">Employee:</strong> {ticket.employeeName}</p>
-                  <p><strong className="info-label">ID:</strong> {ticket.employeeId}</p>
-                  <p><strong className="info-label">Email:</strong> {ticket.email}</p>
-                  <p><strong className="info-label">Date:</strong> {new Date(ticket.date).toLocaleDateString()}</p>
-                  <p><strong className="info-label">Time:</strong> {ticket.time}</p>
-                </div>
-
-                {!showInput[ticket._id] ? (
-                  <button className="action-button close-ticket-btn" onClick={() => handleShowInput(ticket._id)}>
-                    Close Ticket
-                  </button>
-                ) : (
-                  <div className="resolution-section">
-                    <textarea
-                      placeholder="Enter resolution description..."
-                      value={resolutions[ticket._id] || ''}
-                      onChange={(e) => handleResolutionChange(ticket._id, e.target.value)}
-                      className="resolution-textarea"
-                      rows={4}
-                    />
-                    <div className="resolution-actions">
-                      <button className="action-button submit-resolution-btn" onClick={() => handleCloseTicket(ticket._id)}>
-                        Submit Resolution
-                      </button>
-                      <button className="action-button cancel-resolution-btn" onClick={() => setShowInput(prev => ({ ...prev, [ticket._id]: false }))}>
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))
-          ) : (
-            <div className="no-tickets-message">
-              <p>🎉 No open tickets assigned to you right now. Great job!</p>
-              <p>Check back later or enjoy your break!</p>
-            </div>
-          )}
-        </div>
-      )}
+      {/* My Details Button */}
+      <button className="details-button" onClick={userpage}>
+        My Details
+      </button>
     </div>
-  );
-}
 
+    {loading && <div className="loading-message">Loading open tickets...</div>}
+    {error && <div className="error-message">{error}</div>}
+
+    {!loading && !error && (
+      <div className="ticket-list-grid">
+        {tickets.length > 0 ? (
+          tickets.map((ticket) => (
+            <div key={ticket._id} className="ticket-card">
+              <div className="ticket-header">
+                <h3 className="ticket-issue">{ticket.issue}</h3>
+                <span className={`ticket-status status-${ticket.status.toLowerCase().replace(/\s/g, '-')}`}>
+                  {ticket.status}
+                </span>
+              </div>
+              <div className="ticket-info">
+                <p><strong className="info-label">Employee:</strong> {ticket.employeeName}</p>
+                <p><strong className="info-label">ID:</strong> {ticket.employeeId}</p>
+                <p><strong className="info-label">Email:</strong> {ticket.email}</p>
+                <p><strong className="info-label">Date:</strong> {new Date(ticket.date).toLocaleDateString()}</p>
+                <p><strong className="info-label">Time:</strong> {ticket.time}</p>
+              </div>
+
+              {!showInput[ticket._id] ? (
+                <button className="action-button close-ticket-btn" onClick={() => handleShowInput(ticket._id)}>
+                  Close Ticket
+                </button>
+              ) : (
+                <div className="resolution-section">
+                  <textarea
+                    placeholder="Enter resolution description..."
+                    value={resolutions[ticket._id] || ''}
+                    onChange={(e) => handleResolutionChange(ticket._id, e.target.value)}
+                    className="resolution-textarea"
+                    rows={4}
+                  />
+                  <div className="resolution-actions">
+                    <button className="action-button submit-resolution-btn" onClick={() => handleCloseTicket(ticket._id)}>
+                      Submit Resolution
+                    </button>
+                    <button className="action-button cancel-resolution-btn" onClick={() => setShowInput(prev => ({ ...prev, [ticket._id]: false }))}>
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <div className="no-tickets-message">
+            <p>🎉 No open tickets assigned to you right now. Great job!</p>
+            <p>Check back later or enjoy your break!</p>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+);
+
+}
 export default ITSupportPage;

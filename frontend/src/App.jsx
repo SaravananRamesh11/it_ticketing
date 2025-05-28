@@ -72,6 +72,7 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         {/* <Route path="/superuser" element={<SuperuserPage />} /> */}
         <Route path="/userdetails" element={< Detail/>} />
+        
         {/* <Route path="/e" element={< EmployeeRegistrationForm/>} /> */}
 
          

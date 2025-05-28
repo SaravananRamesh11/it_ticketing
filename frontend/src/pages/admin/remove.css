@@ -44,7 +44,7 @@
 
 .form-input:focus {
     border-color: transparent; /* focus:border-transparent */
-    box-shadow: 0 0 0 2px #ef4444, 0 0 0 4px rgba(239, 68, 68, 0.5); /* focus:ring-2 focus:ring-red-500 */
+    box-shadow: 0 0 0 2px #3F51B5, 0 0 0 4px rgba(239, 68, 68, 0.5); /* focus:ring-2 focus:ring-red-500 */
 }
 
 /* Remove User Button */
@@ -52,7 +52,7 @@
     width: 100%; /* w-full */
     padding: 10px 16px; /* px-4 py-2 */
     color: #ffffff; /* text-white */
-    background-color: #dc2626; /* bg-red-600 */
+    background-color: #3F51B5; /* bg-red-600 */
     border: none; /* Remove default button border */
     border-radius: 6px; /* rounded-md */
     cursor: pointer; /* Indicate it's clickable */
@@ -63,18 +63,18 @@
 }
 
 .remove-user-button:hover {
-    background-color: #b91c1c; /* hover:bg-red-700 */
+    background-color: #3F51B5; /* hover:bg-red-700 */
     transform: translateY(-2px); /* hover:-translate-y-0.5 (slight lift) */
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04); /* hover:shadow-xl */
 }
 
 .remove-user-button:focus {
     outline: none; /* focus:outline-none */
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #ef4444; /* focus:ring-2 focus:ring-red-500 focus:ring-offset-2 (white then red ring) */
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3F51B5; /* focus:ring-2 focus:ring-red-500 focus:ring-offset-2 (white then red ring) */
 }
 
 .remove-user-button:active {
     transform: translateY(0); /* active:translate-y-0 (pressed down) */
     box-shadow: 0 5px 10px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.03); /* active:shadow-md */
-    background-color: #991b1b; /* A bit darker when active */
+    background-color:#3F51B5; /* A bit darker when active */
 }

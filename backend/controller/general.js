@@ -3,6 +3,7 @@ const jwt=require("jsonwebtoken")
 require("dotenv").config()
 const User=require("../models/User")
 const bcrypt = require('bcrypt');
+const passwordValidator = require('password-validator');
 
 // const login=async (req, res) => {
 //   const { eid, password } = req.body;
@@ -48,7 +49,7 @@ const login = async (req, res) => {
     // Compare provided password with hashed password in database
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid Employee ID or password' });
+      return res.status(401).json({ message: 'Invalid Employee ID or password from meeeee' });
     }
 
     // Create JWT token
@@ -108,6 +109,80 @@ const getdetails=async (req, res) => {
   }
 };
 
+// const password =async (req, res) => {
+//   const { id, newPassword } = req.body;
+
+//   if (!id || !newPassword) {
+//     return res.status(400).json({ message: 'User ID and new password are required' });
+//   }
+
+//   try {
+//     const updatedUser = await User.findByIdAndUpdate(
+//       id,
+//       { password: newPassword },
+//       { new: true }
+//     );
+
+//     if (!updatedUser) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     res.json({ message: 'Password updated successfully' });
+//   } catch (error) {
+//     console.error('Error updating password:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 
 
-module.exports = { login,getdetails };
+
+
+const password = async (req, res) => {
+  const { id, newPassword } = req.body;
+
+  // Basic validation
+  if (!id || !newPassword) {
+    return res.status(400).json({ message: 'User ID and new password are required' });
+  }
+
+  // Password strength validation (highly recommended)
+  const schema = new passwordValidator();
+  schema
+    .is().min(8)
+    .has().uppercase()
+    .has().lowercase()
+    .has().digits()
+    .has().not().spaces();
+
+  if (!schema.validate(newPassword)) {
+    return res.status(400).json({ 
+      message: 'Password must be at least 8 characters with uppercase, lowercase, and numbers'
+    });
+  }
+
+  try {
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update the password
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+module.exports = { login,getdetails,password};

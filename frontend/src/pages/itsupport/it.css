@@ -307,3 +307,31 @@
         margin-bottom: 25px;
     }
 }
+
+.details-button {
+    position: absolute;
+    top: 30px; /* Increased padding from top */
+    right: 30px; /* Increased padding from right */
+    padding: 12px 25px; /* More generous padding */
+    background-color: #007bff; /* Primary blue */
+    color: white;
+    border: none;
+    border-radius: 25px; /* Pill-shaped button */
+    cursor: pointer;
+    font-weight: 600; /* Slightly bolder text */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.25); /* Subtle shadow */
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.details-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.35); /* More prominent shadow */
+}
+
+.details-button:active {
+    transform: translateY(0); /* Press effect */
+    background-color: #004085;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+}

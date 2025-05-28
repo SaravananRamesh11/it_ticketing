@@ -32,7 +32,7 @@ const {ticket,user_detail,password} = require('../controller/user');
 
 // Submit a ticket
 router.post('/ticket', ticket);
-router.post('/detail',user_detail);
+
 router.put('/password',password);
 
 module.exports = router;

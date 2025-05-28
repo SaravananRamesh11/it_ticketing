@@ -6,29 +6,29 @@ const mongoose=require("mongoose")
 
 
 
-const user_detail = async (req, res) => {
-  try {
-    const { id } = req.body;
+// const user_detail = async (req, res) => {
+//   try {
+//     const { id } = req.body;
 
-    // Improved ID validation
-    if (!id || typeof id !== 'string' || !mongoose.isValidObjectId(id)) {
-      return res.status(400).json({ message: "Invalid ID format" });
-    }
+//     // Improved ID validation
+//     if (!id || typeof id !== 'string' || !mongoose.isValidObjectId(id)) {
+//       return res.status(400).json({ message: "Invalid ID format" });
+//     }
 
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+//     const user = await User.findById(id);
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
 
-    res.status(200).json(user);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ 
-      message: "Server error",
-      error: error.message 
-    });
-  }
-}
+//     res.status(200).json(user);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ 
+//       message: "Server error",
+//       error: error.message 
+//     });
+//   }
+// }
 
 const password =async (req, res) => {
   const { id, newPassword } = req.body;
@@ -225,4 +225,4 @@ const ticket = async (req, res) => {
 
 
 
-module.exports={ticket,user_detail,password}
+module.exports={ticket,password}
